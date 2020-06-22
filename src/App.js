@@ -4,11 +4,21 @@ import MainGame from './Components/MainGame';
 import EndScreen from './Components/EndScreen';
 
 function App() {
-	const [gameStart, setGame] = useState(false);
+	const [gameStart, setGame] = useState(true);
 	const [gameEnd, setEnd] = useState(false);
 
 	function handleStart() {
 		setGame(!gameStart);
+	}
+
+	function handleGameOver() {
+		setGame((prevState) => !prevState);
+		setEnd((prevState) => !prevState);
+	}
+
+	function handleRestart() {
+		setGame((prevState) => !prevState);
+		setEnd((prevState) => !prevState);
 	}
 
 	return (
@@ -16,8 +26,8 @@ function App() {
 			<div>
 				<button onClick={() => handleStart()}>Game Start</button>
 			</div>
-			{gameStart && <MainGame />}
-			{gameEnd && <EndScreen />}
+			{gameStart && <MainGame handleGameOver={handleGameOver} />}
+			{gameEnd && <EndScreen handleRestart={handleRestart}/>}
 		</div>
 	);
 }

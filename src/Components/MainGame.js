@@ -1,73 +1,42 @@
 import React, { useState, useEffect } from 'react';
 
-function useDeviceOrientation() {
-	const [deviceOrientation, setDeviceOrientation] = useState({
-		absolute: false,
-		alpha: null,
-		beta: null,
-		gamma: null,
-	});
-
-	function handleDeviceOrientation(event) {
-		setDeviceOrientation({
-			absolute: event.absolute,
-			alpha: event.alpha,
-			beta: event.beta,
-			gamma: event.gamma,
-		});
-	}
-
-	useEffect(() => {
-		window.addEventListener('deviceorientation', handleDeviceOrientation, true);
-
-		return () => {
-			window.removeEventListener('deviceorientation', handleDeviceOrientation);
-		};
-	}, []);
-
-	return deviceOrientation;
-}
-
-export default function MainGame() {
+export default function MainGame(props) {
+	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
-	let value = useDeviceOrientation();
-
-	/* 	const [deviceOrientation, setDeviceOrientation] = useState({
-		absolute: false,
-		alpha: null,
-		beta: null,
-		gamma: null,
-	});
+	const [returned, setReturned] = useState(true);
+	const [playerSwing, setSwing] = useState(false);
 
 	useEffect(() => {
-		window.addEventListener('deviceorientation', handleDeviceOrientation, true);
+		const returnTime = generateRobotReturnTime();
+		setTimeout(() => {
+			setReturned((prevState) => !prevState);
+			setSwing((prevState) => !prevState);
+			checkIfReturned();
+		}, returnTime);
+	}, [score]);
 
-		return () => {
-			window.removeEventListener('deviceorientation', handleDeviceOrientation);
-		};
-	}, []);
-
-	function handleDeviceOrientation(event) {
-		let { absolute, alpha, beta, gamma } = { event };
-		setDeviceOrientation({
-			absolute,
-			alpha,
-			beta,
-			gamma,
-		});
-	} */
+	function checkIfReturned() {
+		setTimeout(() => {
+			if (returned === false) {
+				console.log('failed to return');
+				handleGameOver();
+			}
+		}, 2000);
+	}
 
 	function handleClick() {
 		setScore((prevState) => prevState + 1);
+		setSwing((prevState) => !prevState);
+	}
+
+	function generateRobotReturnTime() {
+		return Math.round(Math.random() * 200) + 600;
 	}
 
 	return (
 		<div>
 			<div>{score}</div>
-			<p>Absolute: {value.absolute}</p>
-			<p>Alpha: {value.alpha}</p>
-			<p>Beta: {value.beta}</p>
-			<p>Gamma: {value.gamma}</p>
+			{playerSwing && <button onClick={() => handleClick()}>Click me</button>}
 		</div>
 	);
 }
