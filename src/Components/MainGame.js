@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { timeout, generateRobotReturnTime } from '../HelperFunctions';
 
 let timeouts = [];
 
@@ -6,19 +7,16 @@ export default function MainGame(props) {
 	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
 	const [returned, setReturned] = useState(true);
-	const [playerSwing, setSwing] = useState(false);
+	const [playerSwing, setSwing] = useState(true);
+
+	const incomingAudio = new Audio('../public/ball-incoming.mp3');
+	const outgoingAudio = new Audio('../public/ball-outgoing.mp3');
 
 	useEffect(() => {
-		const returnTime = generateRobotReturnTime();
+		checkIfReturned();
+	}, [returned]);
 
-		setTimeout(() => {
-			setReturned((prevState) => !prevState);
-			setSwing((prevState) => !prevState);
-			checkIfReturned();
-		}, returnTime);
-	}, [score]);
-
-	function checkIfReturned() {
+	const checkIfReturned = () => {
 		timeouts.push(
 			setTimeout(() => {
 				if (returned === false) {
@@ -27,34 +25,36 @@ export default function MainGame(props) {
 				}
 			}, 2000)
 		);
-		console.log('checking', timeouts);
-	}
+	};
 
-	function handleClearTimeout(timeouts) {
-		console.log(timeouts);
+	const handleClearingTimeout = (timeouts) => {
+		clearTimeout(timeouts[timeouts.length - 1]);
+		timeouts.pop();
+	};
 
-		for (let i = timeouts.length - 1; i > 0; i--) {
-			console.log('cleared');
-			clearTimeout(timeouts[i]);
-			timeouts.pop();
-		}
-	}
+	const handleClick = () => {
+		handleClearingTimeout(timeouts);
+		//handleAudio(outgoingAudio);
 
-	function handleClick() {
-		console.log(timeouts, 'timeout before');
-		handleClearTimeout(timeouts);
 		setScore((prevState) => prevState + 1);
 		setSwing((prevState) => !prevState);
-	}
+		setReturned(() => true);
+		handleRobot();
+	};
 
-	function generateRobotReturnTime() {
-		return Math.round(Math.random() * 200) + 600;
-	}
+	const handleRobot = async () => {
+		const returnTime = generateRobotReturnTime();
+		await timeout(returnTime);
+		setReturned((prevState) => !prevState);
+		setSwing((prevState) => !prevState);
+	};
 
 	return (
 		<div>
 			<div>{score}</div>
 			{playerSwing && <button onClick={() => handleClick()}>Click me</button>}
+			{/* 			{<button onClick={() => handleAudio(outgoingAudio)}>test sound</button>}
+			 */}
 		</div>
 	);
 }

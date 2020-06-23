@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import './App.css';
 import MainGame from './Components/MainGame';
 import EndScreen from './Components/EndScreen';
+import { handleAudio } from './HelperFunctions';
 
 function App() {
+	const gameOverAudio = new Audio('../public/game-over.mp3');
+
 	const [gameStart, setGame] = useState(true);
 	const [gameEnd, setEnd] = useState(false);
 
@@ -14,6 +17,7 @@ function App() {
 	function handleGameOver() {
 		setGame((prevState) => !prevState);
 		setEnd((prevState) => !prevState);
+		//handleAudio(gameOverAudio);
 	}
 
 	function handleRestart() {
@@ -26,8 +30,10 @@ function App() {
 			<div>
 				<button onClick={() => handleStart()}>Game Start</button>
 			</div>
-			{gameStart && <MainGame handleGameOver={handleGameOver} />}
-			{gameEnd && <EndScreen handleRestart={handleRestart}/>}
+			{gameStart && (
+				<MainGame handleGameOver={handleGameOver} handleAudio={handleAudio} />
+			)}
+			{gameEnd && <EndScreen handleRestart={handleRestart} />}
 		</div>
 	);
 }
