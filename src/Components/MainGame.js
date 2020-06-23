@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
+let timeouts = [];
+
 export default function MainGame(props) {
 	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
@@ -8,6 +10,7 @@ export default function MainGame(props) {
 
 	useEffect(() => {
 		const returnTime = generateRobotReturnTime();
+
 		setTimeout(() => {
 			setReturned((prevState) => !prevState);
 			setSwing((prevState) => !prevState);
@@ -16,15 +19,30 @@ export default function MainGame(props) {
 	}, [score]);
 
 	function checkIfReturned() {
-		setTimeout(() => {
-			if (returned === false) {
-				console.log('failed to return');
-				handleGameOver();
-			}
-		}, 2000);
+		timeouts.push(
+			setTimeout(() => {
+				if (returned === false) {
+					console.log('failed to return');
+					handleGameOver();
+				}
+			}, 2000)
+		);
+		console.log('checking', timeouts);
+	}
+
+	function handleClearTimeout(timeouts) {
+		console.log(timeouts);
+
+		for (let i = timeouts.length - 1; i > 0; i--) {
+			console.log('cleared');
+			clearTimeout(timeouts[i]);
+			timeouts.pop();
+		}
 	}
 
 	function handleClick() {
+		console.log(timeouts, 'timeout before');
+		handleClearTimeout(timeouts);
 		setScore((prevState) => prevState + 1);
 		setSwing((prevState) => !prevState);
 	}
