@@ -5,7 +5,7 @@ import EndScreen from './Components/EndScreen';
 import { handleAudio } from './HelperFunctions';
 
 function App() {
-	const gameOverAudio = new Audio('../public/game-over.mp3');
+	//const gameOverAudio = new Audio('../public/game-over.mp3');
 
 	const [gameStart, setGame] = useState(true);
 	const [gameEnd, setEnd] = useState(false);

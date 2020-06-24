@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { timeout, generateRobotReturnTime } from '../HelperFunctions';
 
 let timeouts = [];
@@ -7,38 +7,41 @@ export default function MainGame(props) {
 	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
 	const [returned, setReturned] = useState(true);
-	const [playerSwing, setSwing] = useState(true);
+	const [canSwing, setCanSwing] = useState(true);
+	const [acceleration, setAcceleration] = useState('');
 
-	const garden = useRef(null);
-	const ball = useRef(null);
+	const handleMotion = (event) => {
+		/* 		let tempAcceleration = event.acceleration.z;
+		if (tempAcceleration > acceleration) {
+			setAcceleration(tempAcceleration);
+		} */
 
-	var maxX = garden.clientWidth - ball.clientWidth;
-	var maxY = garden.clientHeight - ball.clientHeight;
-
-	window.addEventListener('deviceorientation', handleOrientation, true);
-	function handleOrientation(event) {
-		let x = event.beta;
-		let y = event.gamma;
-		if (x > 90) {
-			x = 90;
+		let tempAcceleration = event.acceleration.z;
+		if (tempAcceleration > 15) {
+			window.removeEventListener('devicemotion', handleMotion, true);
+			handleClearingTimeout(timeouts);
+			setAcceleration(tempAcceleration);
+			setScore((prevState) => prevState + 1);
+			setReturned(() => true);
+			handleRobot();
 		}
-		if (x < -90) {
-			x = -90;
-		}
-		x += 90;
-		y += 90;
-		ball.style.top = (maxY * y) / 180 - 10 + 'px';
-		ball.style.left = (maxX * x) / 180 - 10 + 'px';
-	}
+	};
 
-	const incomingAudio = new Audio('../public/ball-incoming.mp3');
-	const outgoingAudio = new Audio('../public/ball-outgoing.mp3');
+	//const incomingAudio = new Audio('../public/ball-incoming.mp3');
+	//const outgoingAudio = new Audio('../public/ball-outgoing.mp3');
 
 	useEffect(() => {
+		console.log(canSwing, 'use Effect');
+
 		checkIfReturned();
+		//window.removeEventListener('devicemotion', handleMotion, true);
 	}, [returned]);
 
 	const checkIfReturned = () => {
+		console.log(canSwing, 'check if returned');
+
+		window.addEventListener('devicemotion', handleMotion, true);
+
 		timeouts.push(
 			setTimeout(() => {
 				if (returned === false) {
@@ -54,33 +57,37 @@ export default function MainGame(props) {
 		timeouts.pop();
 	};
 
-	const handleClick = () => {
-		handleClearingTimeout(timeouts);
-		//handleAudio(outgoingAudio);
-
-		setScore((prevState) => prevState + 1);
-		setSwing((prevState) => !prevState);
-		setReturned(() => true);
-		handleRobot();
-	};
-
 	const handleRobot = async () => {
 		const returnTime = generateRobotReturnTime();
+		window.removeEventListener('devicemotion', handleMotion, true);
+		setCanSwing((prevState) => !prevState);
 		await timeout(returnTime);
 		setReturned((prevState) => !prevState);
-		setSwing((prevState) => !prevState);
+		console.log(canSwing, 'handlerobot');
+	};
+
+	const handleClick = () => {
+		//handleClearingTimeout(timeouts);
+		//handleAudio(outgoingAudio);
+
+		//setScore((prevState) => prevState + 1);
+		//setSwing((prevState) => !prevState);
+		//setReturned(() => true);
+		handleRobot();
 	};
 
 	return (
 		<div>
+			<div>{acceleration}</div>
 			<div>{score}</div>
-			{playerSwing && <button onClick={() => handleClick()}>Click me</button>}
+			{canSwing && <button onClick={() => handleClick()}>Click me</button>}
 			{/* 			{<button onClick={() => handleAudio(outgoingAudio)}>test sound</button>}
 			 */}
-			<button onClick={(e) => console.log(handleOrientation())}>test</button>
-			<div ref={garden} class='garden'>
-				<div ref={ball} class='ball'></div>
-			</div>
+			<button onClick={(e) => console.log(window.DeviceMotionEvent)}>
+				test
+			</button>
+
+			<div>{}</div>
 		</div>
 	);
 }
