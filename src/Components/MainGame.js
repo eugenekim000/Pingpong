@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { timeout, generateRobotReturnTime } from '../HelperFunctions';
+import { playSound } from '../HelperFunctions';
+import incoming from '../assets/ball-incoming.mp3';
+import outgoing from '../assets/ball-outgoing.mp3';
 
 let timeouts = [];
 
@@ -7,15 +10,10 @@ export default function MainGame(props) {
 	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
 	const [returned, setReturned] = useState(true);
-	const [canSwing, setCanSwing] = useState(true);
 	const [acceleration, setAcceleration] = useState('');
+	const [firstRender, setRender] = useState(false);
 
 	const handleMotion = (event) => {
-		/* 		let tempAcceleration = event.acceleration.z;
-		if (tempAcceleration > acceleration) {
-			setAcceleration(tempAcceleration);
-		} */
-
 		let tempAcceleration = event.acceleration.z;
 		if (tempAcceleration > 15) {
 			window.removeEventListener('devicemotion', handleMotion, true);
@@ -27,20 +25,17 @@ export default function MainGame(props) {
 		}
 	};
 
-	//const incomingAudio = new Audio('../public/ball-incoming.mp3');
-	//const outgoingAudio = new Audio('../public/ball-outgoing.mp3');
+	const incomingAudio = new Audio(incoming);
+	const outgoingAudio = new Audio(outgoing);
 
 	useEffect(() => {
-		console.log(canSwing, 'use Effect');
-
 		checkIfReturned();
-		//window.removeEventListener('devicemotion', handleMotion, true);
 	}, [returned]);
 
 	const checkIfReturned = () => {
-		console.log(canSwing, 'check if returned');
-
-		window.addEventListener('devicemotion', handleMotion, true);
+		if (firstRender) {
+			window.addEventListener('devicemotion', handleMotion, true);
+		}
 
 		timeouts.push(
 			setTimeout(() => {
@@ -59,20 +54,14 @@ export default function MainGame(props) {
 
 	const handleRobot = async () => {
 		const returnTime = generateRobotReturnTime();
-		window.removeEventListener('devicemotion', handleMotion, true);
-		setCanSwing((prevState) => !prevState);
 		await timeout(returnTime);
+		playSound(outgoingAudio);
 		setReturned((prevState) => !prevState);
-		console.log(canSwing, 'handlerobot');
 	};
 
 	const handleClick = () => {
-		//handleClearingTimeout(timeouts);
-		//handleAudio(outgoingAudio);
-
-		//setScore((prevState) => prevState + 1);
-		//setSwing((prevState) => !prevState);
-		//setReturned(() => true);
+		playSound(incomingAudio);
+		if (!firstRender) setRender(() => true);
 		handleRobot();
 	};
 
@@ -80,14 +69,12 @@ export default function MainGame(props) {
 		<div>
 			<div>{acceleration}</div>
 			<div>{score}</div>
-			{canSwing && <button onClick={() => handleClick()}>Click me</button>}
+			{<button onClick={() => handleClick()}>Click me</button>}
 			{/* 			{<button onClick={() => handleAudio(outgoingAudio)}>test sound</button>}
 			 */}
 			<button onClick={(e) => console.log(window.DeviceMotionEvent)}>
 				test
 			</button>
-
-			<div>{}</div>
 		</div>
 	);
 }
