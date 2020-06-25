@@ -22,7 +22,7 @@ function App() {
 		<div className='App'>
 			{gameStart && <MainGame handleGameOver={handleGameOver} />}
 			{gameEnd && <EndScreen handleRestart={handleRestart} />}
-			{/* 		<Test /> */}
+			{/* <Test /> */}
 		</div>
 	);
 }

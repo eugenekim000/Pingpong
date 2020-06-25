@@ -4,22 +4,22 @@ import { playSound } from '../HelperFunctions';
 import incoming from '../assets/ball-incoming.mp3';
 import outgoing from '../assets/ball-outgoing.mp3';
 
-let timeouts = [];
-
 export default function MainGame(props) {
 	const { handleGameOver } = props;
 	const [score, setScore] = useState(0);
 	const [returned, setReturned] = useState(true);
-	const [acceleration, setAcceleration] = useState('');
+	const [acceleration, setAcceleration] = useState(0);
 	const [firstRender, setRender] = useState(false);
+	const [timeoutId, setTimeoutID] = useState(-1);
 
 	const incomingAudio = new Audio(incoming);
 	const outgoingAudio = new Audio(outgoing);
 
 	const handleClick = () => {
-		playSound(incomingAudio);
+		//playSound(incomingAudio);
 		if (!firstRender) setRender(() => true);
 		handleRobot();
+		console.log(timeoutId, 'returned in click');
 	};
 
 	const handleRobot = async () => {
@@ -31,45 +31,39 @@ export default function MainGame(props) {
 
 	useEffect(() => {
 		checkIfReturned();
+		console.log(timeoutId, 'useeffect');
 	}, [returned]);
 
 	const checkIfReturned = () => {
 		if (firstRender) {
 			window.addEventListener('devicemotion', handleMotion, true);
-		}
-
-		timeouts.push(
-			setTimeout(() => {
-				if (returned === false) {
+			setTimeoutID(
+				setTimeout(() => {
 					console.log('failed to return');
 					handleGameOver();
-				}
-			}, 2000)
-		);
+				}, 2000)
+			);
+		}
 	};
 
 	const handleMotion = (event) => {
-		let tempAcceleration = event.acceleration.z;
-		if (tempAcceleration > 15) {
-			window.removeEventListener('devicemotion', handleMotion, true);
-			handleClearingTimeout(timeouts);
-			setAcceleration(tempAcceleration);
-			setScore((prevState) => prevState + 1);
-			setReturned(() => true);
-			handleRobot();
-		}
-	};
+		console.log(returned, 'handlemotion');
 
-	const handleClearingTimeout = (timeouts) => {
-		clearTimeout(timeouts[timeouts.length - 1]);
-		timeouts.pop();
+		let tempAcceleration = event.acceleration.z;
+		if (tempAcceleration > 10) {
+			window.removeEventListener('devicemotion', handleMotion, true);
+			clearTimeout(timeoutId);
+			setScore((prevState) => prevState + 1);
+			handleRobot();
+
+			setAcceleration(tempAcceleration);
+		}
 	};
 
 	return (
 		<div>
-			<div>{acceleration}</div>
 			<div>{score}</div>
-			{<button onClick={() => handleClick()}>Click me</button>}
+			{<button onClick={() => handleClick()}>Start!</button>}
 		</div>
 	);
 }

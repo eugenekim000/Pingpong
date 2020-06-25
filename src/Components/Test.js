@@ -13,26 +13,33 @@ export default function Test() {
 		setGamma(y);
 	};
 
+	useEffect(() => {
+		window.addEventListener('devicemotion', handleMotion, true);
+		window.addEventListener(
+			'deviceorientation',
+			deviceOrientationHandler,
+			true
+		);
+	}, []);
+
 	const handleMotion = (event) => {
 		let tempAcceleration = event.acceleration.z;
-		setAcceleration(tempAcceleration);
-		setScore((prevState) => prevState + 1);
+		if (tempAcceleration > acceleration) setAcceleration(tempAcceleration);
+		//setScore((prevState) => prevState + 1);
 
-		/* 	if (tempAcceleration > 10) {
+		if (tempAcceleration > 10) {
 			window.removeEventListener('devicemotion', handleMotion, true);
 			setScore((prevState) => prevState + 1);
-		} */
+		}
 	};
 
-	window.addEventListener('devicemotion', handleMotion, true);
-	window.addEventListener('deviceorientation', deviceOrientationHandler, true);
+	//window.addEventListener('deviceorientation', deviceOrientationHandler, true);
 
 	return (
 		<div>
 			<div>acceleration: {acceleration}</div>
 			<div>score: {score}</div>
 			<div>beta: {beta}</div>
-			<div>gamma: {gamma}</div>
 		</div>
 	);
 }

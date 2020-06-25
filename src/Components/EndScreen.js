@@ -9,7 +9,7 @@ export default function EndScreen(props) {
 	const gameOverAudio = new Audio(gameOver);
 
 	useEffect(() => {
-		playSound(gameOverAudio);
+		//playSound(gameOverAudio);
 	}, []);
 
 	return (
