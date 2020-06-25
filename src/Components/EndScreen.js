@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
-import gameOver from '../assets/game-over.mp3';
 import { playSound } from '../HelperFunctions';
-import outgoing from '../assets/ball-outgoing.mp3';
+
+import gameOver from '../assets/game-over.mp3';
 
 export default function EndScreen(props) {
 	const { handleRestart } = props;
 
+	const gameOverAudio = new Audio(gameOver);
+
 	useEffect(() => {
-		playSound(outgoing);
+		playSound(gameOverAudio);
 	}, []);
 
 	return (
