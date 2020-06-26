@@ -14,9 +14,9 @@ export const generateReturnTime = (score, type) => {
 			break;
 	}
 
-	/* 	if (score >= 10)
+	if (score >= 10)
 		returnTime =
-			returnTime / (1 + Number.parseFloat((score / 100).toPrecision(1))); */
+			returnTime / (1 + Number.parseFloat((score / 100).toPrecision(1)));
 	return returnTime;
 };
 

@@ -25,40 +25,43 @@ export default function MainGame(props) {
 	const handleRobot = async () => {
 		const robotReturnTime = generateReturnTime(score, 'robot');
 		await timeout(robotReturnTime);
-		playSound(outgoingAudio);
+		await playSound(outgoingAudio);
 		setReturned((prevState) => !prevState);
 	};
 
 	useEffect(() => {
+		window.addEventListener('devicemotion', handleMotion, true);
 		checkIfReturned();
 	}, [returned]);
 
 	const checkIfReturned = () => {
 		if (firstRender) {
 			const playerReturnTime = generateReturnTime(score, 'player');
-			window.addEventListener('devicemotion', handleMotion, true);
 			setTimeoutID(
 				setTimeout(() => {
 					handleGameOver(score);
-				}, 2000)
+				}, playerReturnTime)
 			);
 		}
 	};
 
-	const handleMotion = (event) => {
+	const handleMotion = async (event) => {
 		let tempAcceleration = event.acceleration.z;
 		if (tempAcceleration > 10) {
-			playSound(incomingAudio);
-			window.removeEventListener('devicemotion', handleMotion, true);
+			//window.removeEventListener('devicemotion', handleMotion, true);
 			clearTimeout(timeoutId);
 			setScore((prevState) => prevState + 1);
+			await playSound(incomingAudio);
+
 			handleRobot();
 		}
 	};
 
-	const clearTest = () => {
+	const clearTest = async () => {
 		clearTimeout(timeoutId);
 		setScore((prevState) => prevState + 1);
+		await playSound(incomingAudio);
+
 		handleRobot();
 	};
 
