@@ -31,7 +31,16 @@ button {
 
 .high-score {
 	position: fixed;
-	top: 80%;
+	top: 85%;
+	left: 50%;
+	transform: translate(-50%);
+	font-size: 3vh;
+	z-index: 1;
+}
+
+.high-score-name {
+	position: fixed;
+	top: 75%;
 	left: 50%;
 	transform: translate(-50%);
 	font-size: 3vh;
@@ -65,12 +74,19 @@ button {
 	z-index: 10;
 }
 
+.restart-button {
+	position: fixed;
+	top: 5%;
+	left: 85%;
+	z-index: 10;
+}
+
 .help-text {
 	position: relative;
 	background-color: black;
 	z-index: 5;
 	color: white;
-	margin: 13% 10% 0% 10%;
+	margin: 13% 7% 0% 7%;
 	height: 80vh;
 }
 
@@ -79,4 +95,41 @@ button {
 	z-index: 10;
 	height: 100vh;
 	background-color: black;
+}
+
+.new-highscore {
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, 0%);
+	z-index: 1;
+}
+
+.submit-button {
+	background-color: transparent;
+	font-family: inherit;
+	color: white;
+	border: transparent;
+	margin-left: 15px;
+}
+
+.input-form {
+	font-family: inherit;
+	text-align: center;
+	width: 100px;
+}
+
+.blinking {
+	animation: blink 1s linear infinite;
+}
+@keyframes blink {
+	0% {
+		opacity: 0;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	100% {
+		opacity: 1;
+	}
 }

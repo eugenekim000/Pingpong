@@ -5,8 +5,7 @@ import incoming from '../assets/ball-incoming.mp3';
 import outgoing from '../assets/ball-outgoing.mp3';
 
 export default function MainGame(props) {
-	const { handleGameOver } = props;
-	const [score, setScore] = useState(0);
+	const { handleGameOver, score, setScore } = props;
 	const [returned, setReturned] = useState(true);
 	const [firstRender, setRender] = useState(false);
 	const [showButton, setButton] = useState(true);
