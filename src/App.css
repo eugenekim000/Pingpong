@@ -38,6 +38,15 @@ button {
 	z-index: 1;
 }
 
+.current-score {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%);
+	font-size: 3vh;
+	z-index: 1;
+}
+
 .high-score-name {
 	position: fixed;
 	top: 75%;
@@ -71,6 +80,13 @@ button {
 	position: fixed;
 	top: 5%;
 	left: 20%;
+	z-index: 10;
+}
+
+.test-button {
+	position: fixed;
+	top: 5%;
+	left: 50%;
 	z-index: 10;
 }
 

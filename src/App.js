@@ -5,24 +5,37 @@ import EndScreen from './Components/EndScreen';
 import HowToPlay from './Components/HowToPlay';
 import firebase from './firebase';
 
+const SORT_OPTIONS = {
+	SCORE_DESC: { column: 'score', direction: 'desc' },
+};
+
 function App() {
 	const [startGame, setStart] = useState(false);
-	const [showMenu, setMenu] = useState(false);
-	const [showEnd, setEnd] = useState(true);
+	const [showMenu, setMenu] = useState(true);
+	const [showEnd, setEnd] = useState(false);
 	const [score, setScore] = useState(0);
-	const [highScore, setHighScore] = useState({ score: 0, name: 'huh' });
+	const [highScore, setHighScore] = useState({ score: 9999, initial: '...' });
 
 	useEffect(() => {
-		/* 		firebase
+		const unsubscribe = firebase
 			.firestore()
 			.collection('high-scores')
-			.onSnapshot((snapshot) => setHighScore(snapshot.docs[0].data())); */
+			.orderBy(
+				SORT_OPTIONS.SCORE_DESC.column,
+				SORT_OPTIONS.SCORE_DESC.direction
+			)
+			.onSnapshot((snapshot) => {
+				setHighScore(snapshot.docs[0].data());
+				console.log(snapshot.docs[0].data());
+			});
+
+		return () => unsubscribe();
 	}, []);
 
 	const handleGameOver = (score) => {
 		if (score > highScore) setHighScore(score);
-		setStart(() => false);
-		setEnd(() => true);
+		setStart(false);
+		setEnd(true);
 	};
 
 	const handleRestart = () => {
@@ -31,8 +44,8 @@ function App() {
 	};
 
 	const handleClick = () => {
-		setStart(() => true);
-		setMenu(() => false);
+		setStart(true);
+		setMenu(false);
 	};
 
 	return (
@@ -56,6 +69,7 @@ function App() {
 					className='end-screen'
 					handleRestart={handleRestart}
 					highScore={highScore}
+					score={score}
 				/>
 			)}
 			<HowToPlay className='how-to' />

@@ -57,15 +57,8 @@ export default function MainGame(props) {
 		}
 	};
 
-	const clearTest = async () => {
-		clearTimeout(timeoutId);
-		setScore((prevState) => prevState + 1);
-		await playSound(incomingAudio);
-
-		handleRobot();
-	};
-
 	useEffect(() => {
+		setScore(0);
 		setButton(false);
 		if (!firstRender) setRender(() => true);
 		handleRobot();
@@ -76,9 +69,6 @@ export default function MainGame(props) {
 			<div className='score'>{score}</div>
 			{showButton && <button onClick={() => handleClick()}>Start!</button>}
 			<div>{timeoutId}</div>
-			{/* 			<button className='test' onClick={() => clearTest()}>
-				clear Timeout
-			</button> */}
 		</div>
 	);
 }
