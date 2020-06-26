@@ -3,15 +3,53 @@ body {
 }
 
 .App {
+	position: relative;
 	text-align: center;
 	color: white;
 	background-color: black;
-	position: fixed;
-	top: 50%;
-	left: 50%;
 }
 
 button {
+	font-family: inherit;
+	position: fixed;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	border: none;
+	color: white;
+	background-color: transparent;
+}
+
+.score {
+	position: fixed;
+	top: 50%;
+	left: 55%;
+	transform: translate(-50%, -50%);
+	font-size: 30vh;
+}
+
+.high-score {
+	position: fixed;
+	top: 80%;
+	left: 50%;
+	transform: translate(-50%);
+	font-size: 3vh;
+}
+
+.game-over {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 10vh;
+}
+
+.test {
+	font-family: inherit;
+	position: fixed;
+	top: 10%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	border: none;
 	color: white;
 	background-color: transparent;

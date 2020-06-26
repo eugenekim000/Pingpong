@@ -2,27 +2,31 @@ import React, { useState } from 'react';
 import './App.css';
 import MainGame from './Components/MainGame';
 import EndScreen from './Components/EndScreen';
-import Test from './Components/Test';
 
 function App() {
-	const [gameStart, setGame] = useState(true);
-	const [gameEnd, setEnd] = useState(false);
+	const [showStart, setStart] = useState(true);
+	const [showEnd, setEnd] = useState(false);
+	const [highScore, setHighScore] = useState(0);
 
-	function handleGameOver() {
-		setGame((prevState) => !prevState);
-		setEnd((prevState) => !prevState);
+	function handleGameOver(score) {
+		if (score > highScore) setHighScore(score);
+		setStart(() => false);
+		setEnd(() => true);
 	}
 
 	function handleRestart() {
-		setGame((prevState) => !prevState);
+		setStart((prevState) => !prevState);
 		setEnd((prevState) => !prevState);
 	}
 
 	return (
 		<div className='App'>
-			{gameStart && <MainGame handleGameOver={handleGameOver} />}
-			{gameEnd && <EndScreen handleRestart={handleRestart} />}
-			{/* <Test /> */}
+			{showStart && (
+				<MainGame handleGameOver={handleGameOver} setHighScore={setHighScore} />
+			)}
+			{showEnd && (
+				<EndScreen handleRestart={handleRestart} highScore={highScore} />
+			)}
 		</div>
 	);
 }
