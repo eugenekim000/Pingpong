@@ -9,8 +9,9 @@ export default function MainGame(props) {
 	const [score, setScore] = useState(0);
 	const [returned, setReturned] = useState(true);
 	const [firstRender, setRender] = useState(false);
-	const [timeoutId, setTimeoutID] = useState(-1);
 	const [showButton, setButton] = useState(true);
+
+	let timeoutId = null;
 
 	const incomingAudio = new Audio(incoming);
 	const outgoingAudio = new Audio(outgoing);
@@ -32,24 +33,24 @@ export default function MainGame(props) {
 	useEffect(() => {
 		window.addEventListener('devicemotion', handleMotion, true);
 		checkIfReturned();
+		return () => window.removeEventListener('devicemotion', handleMotion, true);
 	}, [returned]);
 
 	const checkIfReturned = () => {
 		if (firstRender) {
 			const playerReturnTime = generateReturnTime(score, 'player');
-			setTimeoutID(
-				setTimeout(() => {
-					handleGameOver(score);
-				}, playerReturnTime)
-			);
+			timeoutId = setTimeout(() => {
+				window.removeEventListener('devicemotion', handleMotion, true);
+				handleGameOver(score);
+			}, playerReturnTime);
 		}
 	};
 
 	const handleMotion = async (event) => {
 		let tempAcceleration = event.acceleration.z;
 		if (tempAcceleration > 10) {
-			//window.removeEventListener('devicemotion', handleMotion, true);
-			clearTimeout(timeoutId);
+			window.removeEventListener('devicemotion', handleMotion, true);
+			clearTimeout(test);
 			setScore((prevState) => prevState + 1);
 			await playSound(incomingAudio);
 
