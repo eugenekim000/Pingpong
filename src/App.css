@@ -12,12 +12,13 @@ body {
 button {
 	font-family: inherit;
 	position: fixed;
-	top: 20%;
+	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border: none;
 	color: white;
 	background-color: transparent;
+	z-index: 1;
 }
 
 .score {
@@ -34,14 +35,16 @@ button {
 	left: 50%;
 	transform: translate(-50%);
 	font-size: 3vh;
+	z-index: 1;
 }
 
 .game-over {
 	position: fixed;
-	top: 50%;
+	top: 20%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 10vh;
+	z-index: 1;
 }
 
 .test {
@@ -53,4 +56,27 @@ button {
 	border: none;
 	color: white;
 	background-color: transparent;
+}
+
+.help-button {
+	position: fixed;
+	top: 5%;
+	left: 20%;
+	z-index: 10;
+}
+
+.help-text {
+	position: relative;
+	background-color: black;
+	z-index: 5;
+	color: white;
+	margin: 13% 10% 0% 10%;
+	height: 80vh;
+}
+
+.how-to {
+	position: relative;
+	z-index: 10;
+	height: 100vh;
+	background-color: black;
 }

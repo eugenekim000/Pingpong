@@ -50,7 +50,7 @@ export default function MainGame(props) {
 		let tempAcceleration = event.acceleration.z;
 		if (tempAcceleration > 10) {
 			window.removeEventListener('devicemotion', handleMotion, true);
-			clearTimeout(test);
+			clearTimeout(timeoutId);
 			setScore((prevState) => prevState + 1);
 			await playSound(incomingAudio);
 
@@ -66,14 +66,20 @@ export default function MainGame(props) {
 		handleRobot();
 	};
 
+	useEffect(() => {
+		setButton(false);
+		if (!firstRender) setRender(() => true);
+		handleRobot();
+	}, []);
+
 	return (
 		<div>
 			<div className='score'>{score}</div>
 			{showButton && <button onClick={() => handleClick()}>Start!</button>}
 			<div>{timeoutId}</div>
-			<button className='test' onClick={() => clearTest()}>
+			{/* 			<button className='test' onClick={() => clearTest()}>
 				clear Timeout
-			</button>
+			</button> */}
 		</div>
 	);
 }
